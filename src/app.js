@@ -8,10 +8,10 @@ const PORT = 3000;
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host : 'localhost',
-    user : 'student',
-    password : '123123',
-    database : 'databasename'
+    host : '172.30.1.42',
+    user : 'root',
+    password : 'n3u3da!',
+    database : 'portfoliopulse'
 });
 
 db.connect((err) => {
