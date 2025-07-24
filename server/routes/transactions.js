@@ -40,10 +40,10 @@ router.get('/chart-data', async (req, res) => {
   try {
     const query = `
       SELECT
-        MONTH(transaction_date) as month,
+        QUARTER(transaction_date) as quarter,
         SUM(ABS(amount)) as total_amount
         FROM transactions
-        GROUP BY month`;
+        GROUP BY quarter`;
     
     const [results] = await db.query(query);
     console.log("this is transaction   data");
