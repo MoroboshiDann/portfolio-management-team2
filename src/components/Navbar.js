@@ -42,11 +42,11 @@ const Navbar = () => {
           </li>
           <li className="w-full">
             <Link
-              to="/portfolio"
+              to="/asset"
               className="text-white text-lg font-semibold hover:bg-purple-900 p-2 rounded-lg block w-full text-center"
               onClick={closeMenu}
             >
-              Portfolio
+              Asset
             </Link>
           </li>
           <li className="w-full">

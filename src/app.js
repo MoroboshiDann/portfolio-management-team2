@@ -5,7 +5,7 @@ import "./App.css";
 
 // Lazy load components for performance optimization
 const Dashboard = lazy(() => import("./components/Dashboard"));
-const PortfolioForm = lazy(() => import("./components/PortfolioForm"));
+const AssetChartForm = lazy(() => import("./components/AssetChartForm"));
 const TransactionForm = lazy(() => import("./components/TransactionForm"));
 const TransactionReconciliation = lazy(() => import("./components/TransRec"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
@@ -45,9 +45,9 @@ function App() {
                   element={<Dashboard portfolios={portfolios} />}
                 />
                 <Route
-                  path="/portfolio"
+                  path="/asset"
                   element={
-                    <PortfolioForm
+                    <AssetChartForm
                       portfolios={portfolios}
                       addPortfolio={addPortfolio}
                       updatePortfolio={updatePortfolio}
