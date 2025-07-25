@@ -1,4 +1,4 @@
-# 📊 Financio - Financial Portfolio Management System
+# 📊 Portfolio Pulse - Financial Portfolio Management System
 
 A sleek and efficient web app designed for individual investors and financial advisors. Track your investments, manage portfolios, reconcile transactions, and monitor performance — all in one intuitive platform. Built with cutting-edge web technologies for optimal user experience and performance. 💼
 
@@ -33,13 +33,13 @@ A sleek and efficient web app designed for individual investors and financial ad
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/Nouran-Alaa/Financio.git
+   git clone https://github.com/MoroboshiDann/portfolio-management-team2.git
    ```
 
 2. **Navigate to the project directory**:
 
    ```bash
-   cd financial-portfolio-management
+   cd portfolio-management-team2
    ```
 
 3. **Install dependencies**:
