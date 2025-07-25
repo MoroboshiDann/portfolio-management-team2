@@ -1,6 +1,6 @@
 # Portfolio Pulse Backend Server
 
-This is the backend server for the Financio financial portfolio management system.
+This is the backend server for the Portfolio Pulse financial portfolio management system.
 
 ## Setup Instructions
 
@@ -10,7 +10,7 @@ This is the backend server for the Financio financial portfolio management syste
    ```
 
 2. **Set up the database**:
-   - Create a MySQL database named `financio`
+   - Create a MySQL database named `portfolio_pulse`
    - Import the schema from `schema.sql`:
      ```bash
      mysql -u root -p < schema.sql
@@ -21,8 +21,8 @@ This is the backend server for the Financio financial portfolio management syste
    - Update the `.env` file with your MySQL credentials:
      ```
      DB_HOST=localhost
-     DB_USER=your_username
-     DB_PASSWORD=your_password
+     DB_USER=root
+     DB_PASSWORD=n3u3da!
      DB_NAME=portfolio_pulse
      PORT=5000
      ```

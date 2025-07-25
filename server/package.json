@@ -1,5 +1,5 @@
 {
-  "name": "pulse-server",
+  "name": "financio-server",
   "version": "1.0.0",
   "description": "Backend server for Financio financial portfolio management system",
   "main": "index.js",

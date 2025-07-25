@@ -10,6 +10,7 @@ const TransactionForm = lazy(() => import("./components/TransactionForm"));
 const TransactionReconciliation = lazy(() => import("./components/TransRec"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
 
+// app
 function App() {
   useEffect(() => {
     document.title = "PortfolioPulse"; // Set the title here
