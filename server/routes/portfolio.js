@@ -9,20 +9,20 @@ router.get('/chart-data', async (req, res) => {
 
     const query = `
     SELECT 
-      MONTH(date) AS month,
-      AVG(value) as average_value
-      FROM portfolio_values
-      GROUP BY MONTH(date)`;
-    
+      MONTH(create_date) AS month,
+      SUM(amount) as balance
+      FROM portfolio
+      GROUP BY month`;
+
     const [results] = await db.query(query);
-    console.log("this is portfolio data");
-    
-    const values = results.map(row => row.average_value);
+    console.log("this is portfolio data --test");
+    console.log(results);
+    const values = results.map(row => parseFloat(row.balance));
     console.log(values);
     res.json({ values });
   } catch (error) {
     console.error('Error fetching portfolio chart data:', error);
-    res.status(500).json({error: 'Failed to fetch portfolio data'});
+    res.status(500).json({ error: 'Failed to fetch portfolio data' });
   }
 });
 

@@ -8,10 +8,10 @@ router.get('/asset-allocation', async (req, res) => {
     // Query to get sum of values grouped by asset type
     const query = `
       SELECT 
-        type,
-        SUM(value) AS total_value
-      FROM portfolio_values
-      GROUP BY type
+        asset,
+        SUM(amount) AS total_value
+      FROM portfolio
+      GROUP BY asset
       ORDER BY total_value DESC`;
     
     const [results] = await db.query(query);
@@ -20,7 +20,7 @@ router.get('/asset-allocation', async (req, res) => {
     // Format data for Chart.js
     const labels = results.map(row => {
       // Capitalize first letter of each type
-      return row.type.charAt(0).toUpperCase() + row.type.slice(1);
+      return row.asset.charAt(0).toUpperCase() + row.asset.slice(1);
     });
     
     const values = results.map(row => row.total_value);
