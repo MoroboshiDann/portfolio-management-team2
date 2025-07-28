@@ -59,8 +59,8 @@ function App() {
                   element={<TransactionForm />} // No longer need to pass addTransaction and transactions
                 />
                 <Route
-                  path="/reconciliation"
-                  element={<TransactionReconciliation />} // No longer need to pass transactions
+                  path="/transrec"
+                  element={<TransactionRecommendation />} // No longer need to pass transactions
                 />
               </Routes>
             </div>
