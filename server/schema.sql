@@ -14,6 +14,10 @@ CREATE TABLE IF NOT EXISTS portfolio_values (
   INDEX (date)
 );
 
+-- ALTER TABLE portfolio_values
+-- ADD COLUMN type ENUM('cash', 'bond', 'stock', 'real estate') NOT NULL
+-- AFTER value;  -- This places the new column after the 'value' column
+
 -- Create transactions table
 CREATE TABLE IF NOT EXISTS transactions (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,19 +37,19 @@ CREATE TABLE IF NOT EXISTS transactions (
 );
 
 -- Sample data for portfolio_values
-INSERT INTO portfolio_values (portfolio_id, date, value) VALUES
-(1, '2023-01-01', 5000.00),
-(1, '2023-02-01', 5200.00),
-(1, '2023-03-01', 5500.00),
-(1, '2023-04-01', 5800.00),
-(1, '2023-05-01', 6000.00),
-(1, '2023-06-01', 6200.00),
-(1, '2023-07-01', 6500.00),
-(1, '2023-08-01', 6800.00),
-(1, '2023-09-01', 7000.00),
-(1, '2023-10-01', 7200.00),
-(1, '2023-11-01', 7500.00),
-(1, '2023-12-01', 7800.00);
+INSERT INTO portfolio_values (portfolio_id, date, value, type) VALUES
+(1, '2023-01-01', 5000.00, 'cash'),
+(1, '2023-02-01', 5200.00, 'cash'),
+(1, '2023-03-01', 5500.00, 'cash'),
+(1, '2023-04-01', 5800.00, 'stock'),
+(1, '2023-05-01', 6000.00, 'stock'),
+(1, '2023-06-01', 6200.00, 'bond'),
+(1, '2023-07-01', 6500.00, 'bond'),
+(1, '2023-08-01', 6800.00, 'real estate'),
+(1, '2023-09-01', 7000.00, 'real estate'),
+(1, '2023-10-01', 7200.00, 'real estate'),
+(1, '2023-11-01', 7500.00, 'real estate'),
+(1, '2023-12-01', 7800.00, 'cash');
 
 -- Sample data for transactions
 INSERT INTO transactions (portfolio_id, transaction_date, amount, type, description) VALUES
