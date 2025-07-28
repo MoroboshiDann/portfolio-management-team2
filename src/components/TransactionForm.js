@@ -1,24 +1,54 @@
 // TransactionForm.js
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { TransactionContext } from "../context/useTrans";
 
 const TransactionForm = () => {
   const { addTransaction, transactions } = useContext(TransactionContext);
+  const [submitStatus, setSubmitStatus] = useState({ message: '', type: '' });
 
-  const initialValues = { type: "buy", asset: "", amount: 0 };
+  const initialValues = { type: "buy", asset: "Cash", amount: 0, name: "" };
 
   const validationSchema = Yup.object({
     asset: Yup.string().required("Asset is required"),
     amount: Yup.number()
       .required("Amount is required")
       .positive("Amount must be positive"),
+    name: Yup.string().required("Name is required"),
   });
 
-  const handleSubmit = (values, { resetForm }) => {
-    addTransaction(values);
-    resetForm();
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      // Adjust amount based on transaction type
+      const adjustedAmount = values.type === 'buy' ? -Math.abs(values.amount) : Math.abs(values.amount);
+      
+      const transactionData = {
+        asset: values.asset,
+        amount: adjustedAmount,
+        name: values.name
+      };
+
+      const response = await fetch('/api/trans-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        addTransaction({ ...transactionData, id: result.id });
+        setSubmitStatus({ message: 'Transaction saved successfully!', type: 'success' });
+        resetForm();
+      } else {
+        setSubmitStatus({ message: 'Failed to save transaction', type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error submitting transaction:', error);
+      setSubmitStatus({ message: 'Error saving transaction', type: 'error' });
+    }
   };
 
   return (
@@ -27,6 +57,15 @@ const TransactionForm = () => {
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Record Transaction
         </h2>
+        
+        {submitStatus.message && (
+          <div className={`mb-4 p-3 rounded-md ${
+            submitStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {submitStatus.message}
+          </div>
+        )}
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -44,7 +83,6 @@ const TransactionForm = () => {
               >
                 <option value="buy">Buy</option>
                 <option value="sell">Sell</option>
-                <option value="transfer">Transfer</option>
               </Field>
             </div>
             <div className="mb-4">
@@ -52,9 +90,16 @@ const TransactionForm = () => {
                 Asset
               </label>
               <Field
+                as="select"
                 name="asset"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              />
+              >
+                <option value="">Select an asset</option>
+                <option value="Cash">Cash</option>
+                <option value="Stock">Stock</option>
+                <option value="Bonds">Bonds</option>
+                <option value="Real Estate">Real Estate</option>
+              </Field>
               <ErrorMessage
                 name="asset"
                 component="div"
@@ -72,6 +117,21 @@ const TransactionForm = () => {
               />
               <ErrorMessage
                 name="amount"
+                component="div"
+                className="text-red-500 text-xs"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <Field
+                name="name"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Enter custom name"
+              />
+              <ErrorMessage
+                name="name"
                 component="div"
                 className="text-red-500 text-xs"
               />
@@ -99,11 +159,11 @@ const TransactionForm = () => {
                 className="bg-white p-4 shadow-md rounded-lg border border-gray-300"
               >
                 <h4 className="text-lg font-semibold mb-2">
-                  {transaction.type.charAt(0).toUpperCase() +
-                    transaction.type.slice(1)}
+                  {transaction.amount < 0 ? 'Buy' : 'Sell'}
                 </h4>
                 <p className="text-gray-700 mb-2">Asset: {transaction.asset}</p>
-                <p className="text-gray-700">Amount: ${transaction.amount}</p>
+                <p className="text-gray-700 mb-2">Name: {transaction.name}</p>
+                <p className="text-gray-700">Amount: ${Math.abs(transaction.amount)}</p>
               </div>
             ))
           ) : (
