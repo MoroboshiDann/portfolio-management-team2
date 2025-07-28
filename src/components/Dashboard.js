@@ -4,7 +4,7 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement, // Register the point element
+  PointElement, // Register the point elementddd
   LineElement, // Register the line element for line charts
   BarElement,
   ArcElement,
