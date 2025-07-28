@@ -6,6 +6,7 @@ require('dotenv').config();
 // Import routes
 const portfolioRoutes = require('./routes/portfolio');
 const transactionRoutes = require('./routes/transactions');
+const assetchartRouter = require('./routes/assetchart');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,7 @@ app.use(express.json());
 // API Routes
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/assetchart', assetchartRouter);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
