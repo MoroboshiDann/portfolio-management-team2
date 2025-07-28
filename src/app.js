@@ -7,7 +7,7 @@ import "./App.css";
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const AssetChartForm = lazy(() => import("./components/AssetChartForm"));
 const TransactionForm = lazy(() => import("./components/TransactionForm"));
-const TransactionReconciliation = lazy(() => import("./components/TransRec"));
+const TransactionRecommendation = lazy(() => import("./components/TransRec"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
 
 // app
