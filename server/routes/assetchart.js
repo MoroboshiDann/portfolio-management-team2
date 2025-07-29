@@ -18,10 +18,10 @@ router.get('/asset-allocation', async (req, res) => {
     // Format data for Chart.js
     const labels = results.map(row => {
       // Capitalize first letter of asset type
-      return row.asset.charAt(0).toUpperCase() + row.asset.slice(1);
+      return row.type.charAt(0).toUpperCase() + row.type.slice(1);
     });
     
-    const values = results.map(row => row.total_value);
+    const values = results.map(row => row.amount);
     console.log("Asset values:", values);
     
     res.json({ 

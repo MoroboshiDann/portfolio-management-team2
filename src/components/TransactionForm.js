@@ -30,7 +30,7 @@ const TransactionForm = () => {
       const adjustedAmount = values.type === 'buy' ? Math.abs(values.amount) : -Math.abs(values.amount);
       
       const transactionData = {
-        asset: values.asset,
+        type: values.asset,
         amount: adjustedAmount,
         name: values.name
       };
