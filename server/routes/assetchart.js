@@ -8,11 +8,9 @@ router.get('/asset-allocation', async (req, res) => {
     // SQL query to sum amounts grouped by asset type
     const query = `
       SELECT 
-        asset,
-        SUM(amount) AS total_value
-      FROM portfolio
-      GROUP BY asset
-      ORDER BY total_value DESC`;
+        type,
+        amount
+      FROM portfolio`;
     
     const [results] = await db.query(query);
     console.log("Asset allocation data retrieved successfully");
@@ -39,25 +37,26 @@ router.get('/asset-allocation', async (req, res) => {
 // Get detailed records for specific asset type
 router.get('/asset-records', async (req, res) => {
   try {
-    const { asset } = req.query;
+    const { type } = req.query;
     
-    if (!asset) {
+    if (!type) {
       return res.status(400).json({ error: 'Missing asset type parameter' });
     }
 
     const query = `
       SELECT 
         id,
+        type,
         name,
-        asset,
         amount,
-        create_date
+        quantity,
+        date
       FROM portfolio
-      WHERE asset = ?
-      ORDER BY create_date DESC`;
+      WHERE type = ?
+      ORDER BY date DESC`;
     
-    const [results] = await db.query(query, [asset.toLowerCase()]);
-    console.log(`Retrieved ${results.length} records for asset type: ${asset}`);
+    const [results] = await db.query(query, [type.toLowerCase()]);
+    console.log(`Retrieved ${results.length} records for asset type: ${type}`);
     
     res.json(results);
   } catch (error) {

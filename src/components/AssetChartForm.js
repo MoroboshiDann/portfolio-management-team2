@@ -48,14 +48,14 @@ const AssetChartForm = () => {
     }
   };
 
-  const fetchAssetRecords = async (asset) => {
+  const fetchAssetRecords = async (type) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/assetchart/asset-records?asset=${asset}`);
+      const response = await fetch(`/api/assetchart/asset-records?type=${type}`);
       const data = await response.json();
       
       setAssetRecords(data);
-      setSelectedAsset(asset);
+      setSelectedAsset(type);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching asset records:', error);
