@@ -10,9 +10,10 @@ const assetchartRouter = require('./routes/assetchart');
 const transFormRouter = require('./routes/trans_form');
 const companyCodesRouter = require('./routes/company_codes');
 const aiAdvisorRouter = require('./routes/ai_advisor');
+const stockRouter = require('./routes/stockroutes'); // Import stock routes
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -25,6 +26,7 @@ app.use('/api/assetchart', assetchartRouter);
 app.use('/api/trans-form', transFormRouter);
 app.use('/api/company-codes', companyCodesRouter);
 app.use('/api/ai-advisor', aiAdvisorRouter);
+app.use('/api/stock', stockRouter); // Use stock routes
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

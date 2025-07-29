@@ -7,7 +7,8 @@ import "./App.css";
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const AssetChartForm = lazy(() => import("./components/AssetChartForm"));
 const TransactionForm = lazy(() => import("./components/TransactionForm"));
-const TransactionRecommendation = lazy(() => import("./components/TransRec"));
+// const TransactionRecommendation = lazy(() => import("./components/TransRec"));
+const StockData = lazy(() => import("./components/StockData"));
 const AssetAllocation = lazy(() => import("./components/AssetAllocationChart"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
 
@@ -64,8 +65,10 @@ function App() {
                   element={<TransactionForm />} // No longer need to pass addTransaction and transactions
                 />
                 <Route
+                  // path="/transrec"
+                  // element={<TransactionRecommendation />} // No longer need to pass transactions
                   path="/transrec"
-                  element={<TransactionRecommendation />} // No longer need to pass transactions
+                  element={<StockData />} // Use StockData component for stock data
                 />
               </Routes>
             </div>
