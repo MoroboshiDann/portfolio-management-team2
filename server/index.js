@@ -13,7 +13,7 @@ const aiAdvisorRouter = require('./routes/ai_advisor');
 const stockRouter = require('./routes/stockroutes'); // Import stock routes
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
