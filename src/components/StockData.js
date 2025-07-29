@@ -25,7 +25,7 @@ const StockData = () => {
                 setLoading(true);
                 setError(null);
                 // 调用后端 API，使用动态股票代码
-                const response = await fetch(`http://localhost:5001/api/stock/stock-data/${symbol}`);
+                const response = await fetch(`http://localhost:5000/api/stock/stock-data/${symbol}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
