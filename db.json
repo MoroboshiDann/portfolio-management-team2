@@ -1,7 +1,0 @@
-{
-  "expected-transactions": [
-    { "id": "1", "type": "buy", "asset": "nmn", "amount": 500 },
-    { "id": "2", "type": "sell", "asset": "nmn", "amount": 200 },
-    { "id": "3", "type": "buy", "asset": "nmn", "amount": 300 }
-  ]
-}

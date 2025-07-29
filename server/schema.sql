@@ -3,14 +3,14 @@ use portfolio_pulse;
 
 
  
---  CREATE TABLE `portfolio` (
---    `id` int NOT NULL AUTO_INCREMENT,
---    `amount` decimal(15,2) DEFAULT NULL,
---    `asset` varchar(45) DEFAULT NULL,
---    `name` varchar(45) DEFAULT NULL,
---    `create_date` date NULL DEFAULT (curdate()),
---    PRIMARY KEY (`id`)
---  ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ CREATE TABLE `portfolio` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `amount` decimal(15,2) DEFAULT NULL,
+   `asset` varchar(45) DEFAULT NULL,
+   `name` varchar(45) DEFAULT NULL,
+   `create_date` date NULL DEFAULT (curdate()),
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
  
 
 
@@ -43,7 +43,7 @@ insert into portfolio (amount, asset, name, create_date) values
 (3204, 'real estate', 'bulter', '2023-11-01'),
 (3001, 'real estate', 'bulter', '2023-12-01');
 
-insert into portfolio (amount, asset, name, create_date) values (10000, 'cash', 'cashy', '2023-01-01')
+insert into portfolio (amount, asset, name, create_date) values (10000, 'cash', 'cashy', '2023-01-01');
 
 -- 新增公司代码表
 CREATE TABLE IF NOT EXISTS company_code (
@@ -59,9 +59,8 @@ INSERT INTO company_code (name, stock_code, bond_code) VALUES
 ('Apple', 'AAPL', 'US037833AJ97'),
 ('Microsoft', 'MSFT', 'US594918BP81'),
 ('Amazon', 'AMZN', 'US023135BZ93'),
-('Alphabet', 'GOOGL', 'US02079KAA25');
-INSERT INTO company_code (name, stock_code, bond_code) VALUES
-('Meta Platforms', 'META', 'US30303MAB14'),         -- Facebook
+('Alphabet', 'GOOGL', 'US02079KAA25'),
+('Meta Platforms', 'META', 'US30303MAB14'),    
 ('NVIDIA', 'NVDA', 'US67066GAA26'),
 ('Berkshire Hathaway', 'BRK.A', 'US084670BL16'),
 ('Johnson & Johnson', 'JNJ', 'US478160BG10'),

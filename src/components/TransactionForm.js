@@ -24,7 +24,7 @@ const TransactionForm = () => {
   const handleSubmit = async (values, { resetForm }) => {
     try {
       // Adjust amount based on transaction type
-      const adjustedAmount = values.type === 'buy' ? -Math.abs(values.amount) : Math.abs(values.amount);
+      const adjustedAmount = values.type === 'buy' ? Math.abs(values.amount) : -Math.abs(values.amount);
       
       const transactionData = {
         asset: values.asset,
@@ -166,7 +166,7 @@ const TransactionForm = () => {
                 className="bg-white p-4 shadow-md rounded-lg border border-gray-300"
               >
                 <h4 className="text-lg font-semibold mb-2">
-                  {transaction.amount < 0 ? 'Buy' : 'Sell'}
+                  {transaction.amount > 0 ? 'Buy' : 'Sell'}
                 </h4>
                 <p className="text-gray-700 mb-2">Asset: {transaction.asset}</p>
                 <p className="text-gray-700 mb-2">Name: {transaction.name}</p>

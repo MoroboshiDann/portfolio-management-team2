@@ -9,6 +9,7 @@ const AssetChartForm = lazy(() => import("./components/AssetChartForm"));
 const TransactionForm = lazy(() => import("./components/TransactionForm"));
 // const TransactionRecommendation = lazy(() => import("./components/TransRec"));
 const StockData = lazy(() => import("./components/StockData"));
+const AssetAllocation = lazy(() => import("./components/AssetAllocationChart"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
 
 // app
@@ -54,6 +55,10 @@ function App() {
                       updatePortfolio={updatePortfolio}
                     />
                   }
+                />
+                <Route
+                  path="/assetallocation"
+                  element={<AssetAllocation />}
                 />
                 <Route
                   path="/transaction"
