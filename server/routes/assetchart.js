@@ -37,7 +37,7 @@ router.get('/asset-allocation', async (req, res) => {
 });
 
 // Get detailed records for specific asset type
-router.get('/assets', async (req, res) => {
+router.get('/asset-records', async (req, res) => {
   try {
     const { asset } = req.query;
     
@@ -48,15 +48,13 @@ router.get('/assets', async (req, res) => {
     const query = `
       SELECT 
         id,
-        portfolio_id as portfolioId,
         name,
         asset,
         amount,
-        type,
-        date
+        create_date
       FROM portfolio
       WHERE asset = ?
-      ORDER BY date DESC`;
+      ORDER BY create_date DESC`;
     
     const [results] = await db.query(query, [asset.toLowerCase()]);
     console.log(`Retrieved ${results.length} records for asset type: ${asset}`);
