@@ -8,6 +8,7 @@ const portfolioRoutes = require('./routes/portfolio');
 const transactionRoutes = require('./routes/transactions');
 const assetchartRouter = require('./routes/assetchart');
 const transFormRouter = require('./routes/trans_form');
+const companyCodesRouter = require('./routes/company_codes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,7 @@ app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/assetchart', assetchartRouter);
 app.use('/api/trans-form', transFormRouter);
+app.use('/api/company-codes', companyCodesRouter);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
