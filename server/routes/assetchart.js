@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Get asset allocation data grouped by type
+// Get aggregated asset allocation data
 router.get('/asset-allocation', async (req, res) => {
   try {
-    // Query to get sum of values grouped by asset type
+    // SQL query to sum amounts grouped by asset type
     const query = `
       SELECT 
         asset,
@@ -15,16 +15,16 @@ router.get('/asset-allocation', async (req, res) => {
       ORDER BY total_value DESC`;
     
     const [results] = await db.query(query);
-    console.log("this is asset allocation data");
+    console.log("Asset allocation data retrieved successfully");
     
     // Format data for Chart.js
     const labels = results.map(row => {
-      // Capitalize first letter of each type
+      // Capitalize first letter of asset type
       return row.asset.charAt(0).toUpperCase() + row.asset.slice(1);
     });
     
     const values = results.map(row => row.total_value);
-    console.log(values);
+    console.log("Asset values:", values);
     
     res.json({ 
       labels,
@@ -33,6 +33,38 @@ router.get('/asset-allocation', async (req, res) => {
   } catch (error) {
     console.error('Error fetching asset allocation data:', error);
     res.status(500).json({ error: 'Failed to fetch asset allocation data' });
+  }
+});
+
+// Get detailed records for specific asset type
+router.get('/assets', async (req, res) => {
+  try {
+    const { asset } = req.query;
+    
+    if (!asset) {
+      return res.status(400).json({ error: 'Missing asset type parameter' });
+    }
+
+    const query = `
+      SELECT 
+        id,
+        portfolio_id as portfolioId,
+        name,
+        asset,
+        amount,
+        type,
+        date
+      FROM portfolio
+      WHERE asset = ?
+      ORDER BY date DESC`;
+    
+    const [results] = await db.query(query, [asset.toLowerCase()]);
+    console.log(`Retrieved ${results.length} records for asset type: ${asset}`);
+    
+    res.json(results);
+  } catch (error) {
+    console.error(`Error fetching records for asset ${req.query.asset}:`, error);
+    res.status(500).json({ error: 'Failed to fetch asset records' });
   }
 });
 
