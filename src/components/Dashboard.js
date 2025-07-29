@@ -134,7 +134,7 @@ const Dashboard = () => {
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white shadow-lg rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Portfolio Growth</h3>
+          <h3 className="text-lg font-semibold mb-4">Total Assets</h3>
           <Line data={portfolioData} />
         </div>
         <div className="bg-white shadow-lg rounded-lg p-6">

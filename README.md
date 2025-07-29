@@ -47,8 +47,19 @@ A sleek and efficient web app designed for individual investors and financial ad
    ```bash
    npm install
    ```
+4. **Install axios dependencies**:
 
-4. **Start the development server**:
+   ```bash
+   npm install axios
+   ```
+
+5. **Install MUI dependencies**:
+
+   ```bash
+   npm install @mui/material @emotion/react @emotion/styled
+   ```
+
+6. **Start the development server**:
 
    ```bash
    npm start

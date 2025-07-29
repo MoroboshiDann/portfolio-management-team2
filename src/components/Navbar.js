@@ -51,6 +51,15 @@ const Navbar = () => {
           </li>
           <li className="w-full">
             <Link
+              to="/assetallocation"
+              className="text-white text-lg font-semibold hover:bg-purple-900 p-2 rounded-lg block w-full text-center"
+              onClick={closeMenu}
+            >
+              Asset Allocation
+            </Link>
+          </li>
+          <li className="w-full">
+            <Link
               to="/transaction"
               className="text-white text-lg font-semibold hover:bg-purple-900 p-2 rounded-lg block w-full text-center"
               onClick={closeMenu}
@@ -60,11 +69,11 @@ const Navbar = () => {
           </li>
           <li className="w-full">
             <Link
-              to="/reconciliation"
+              to="/transrec"
               className="text-white text-lg font-semibold hover:bg-purple-900 p-2 rounded-lg block w-full text-center"
               onClick={closeMenu}
             >
-              Reconciliation
+              TransRec
             </Link>
           </li>
         </ul>
