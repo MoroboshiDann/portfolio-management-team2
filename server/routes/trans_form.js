@@ -7,11 +7,11 @@ router.post('/', async (req, res) => {
   try {
     console.log(req.body);
     const { type, amount, name } = req.body;
-    
+
     // Validate required fields
     if (!type || amount === undefined || !name) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: type, amount, and name are required' 
+      return res.status(400).json({
+        error: 'Missing required fields: type, amount, and name are required'
       });
     }
 
@@ -22,6 +22,8 @@ router.post('/', async (req, res) => {
       WHERE type = ? and name = ?
     `;
     const [portfolioRecord] = await db.query(findPorfolioRecord, [type, name]);
+    const recordAmount = portfolioRecord[0] == null ? 0 : parseFloat(portfolioRecord[0].amount);
+
 
     const findPrice = `
     SELECT price FROM share_price WHERE name = ?
@@ -34,12 +36,13 @@ router.post('/', async (req, res) => {
 
     // sell branch 
     if (amount < 0) {
+      console.log(`this is the sum of record and input value: ${recordAmount + amount}`);
       if (portfolioRecord[0] == null) {
         return res.status(400).json({
           error: 'do not have asset'
         });
       }
-      if (portfolioRecord[0].amount + amount < 0) {
+      if (recordAmount + amount < 0) {
         return res.status(400).json({
           error: 'Not enough amount'
         });
@@ -51,32 +54,36 @@ router.post('/', async (req, res) => {
           VALUES (?, ?, ?, ?)
         `;
         const reuslt = await db.query(newRecord, [type, amount, name, quantity]);
+        const insertTransaction = `
+          INSERT INTO transaction (amount, name) VALUES (?,?)
+        `;
+        await db.query(insertTransaction, [amount, name]);
         return res.status(201).json({
           id: reuslt.id,
           message: 'Transaction saved successfully',
           data: { type, amount, name, quantity }
         });
       }
-      
+
     }
     const updateRecord = `
       UPDATE portfolio
-      SET amount = amount + ? and quantity = quantity + ?
-      WHERE type = ? and name = ?
+      SET amount = amount + ?, quantity = quantity + ?
+      WHERE type = ? AND name = ?
     `;
-    const result = await db.query(updateRecord, [amount, type, name, quantity]);
+    const result = await db.query(updateRecord, [amount, quantity, type, name]);
 
     const insertTransaction = `
       INSERT INTO transaction (amount, name) VALUES (?,?)
     `;
     await db.query(insertTransaction, [amount, name]);
-    
-    res.status(201).json({ 
-      id: result.id, 
+
+    res.status(201).json({
+      id: result.id,
       message: 'Transaction saved successfully',
       data: { type, amount, name, quantity }
     });
-    
+
   } catch (error) {
     console.error('Error saving transaction to portfolio table:', error);
     res.status(500).json({ error: 'Failed to save transaction' });
