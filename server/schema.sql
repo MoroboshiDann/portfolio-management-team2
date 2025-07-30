@@ -9,7 +9,7 @@ use portfolio_pulse;
    `type` enum('stocks','mutual funds','gold','real estate','fixed deposits','bonds') NOT NULL,
    `quantity` decimal(15,5) DEFAULT NULL,
    PRIMARY KEY (`id`)
- ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+ ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `transaction` (
    `id` int NOT NULL AUTO_INCREMENT,
@@ -17,7 +17,7 @@ CREATE TABLE `transaction` (
    `amount` decimal(15,2) DEFAULT NULL,
    `tran_date` date DEFAULT (curdate()),
    PRIMARY KEY (`id`)
- ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+ ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `share_price` (
    `id` int NOT NULL AUTO_INCREMENT,
@@ -26,7 +26,7 @@ CREATE TABLE `share_price` (
    `price` decimal(15,5) NOT NULL,
    `update_date` date DEFAULT (curdate()),
    PRIMARY KEY (`id`)
- ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+ ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 新增公司代码表
 CREATE TABLE IF NOT EXISTS company_code (
@@ -60,4 +60,4 @@ INSERT INTO company_code (name, stock_code, bond_code) VALUES
 ('Pfizer', 'PFE', 'US717081EB36');
 
 
-INSER INTO share_price (name, type, price) VALUES ('Tesla', 'bonds', 15.11);
+INSERT INTO share_price (name, type, price) VALUES ('Tesla', 'bonds', 15.11);
