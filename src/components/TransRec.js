@@ -135,7 +135,7 @@ const FinancialAdvice = () => {
           )}
         </div>
 
-        {/* Life Insurance */}
+        {/* Bonds */}
         <div
           className="p-4 cursor-pointer hover:bg-gray-50 transition"
           onClick={() => toggleSection('lifeInsurance')}
@@ -143,15 +143,13 @@ const FinancialAdvice = () => {
           <div class="flex justify-between items-center">
             <span>
               <FaShieldAlt className="inline-block text-red-500 mr-2" />
-              <strong>Life Insurance</strong>
+              <strong>Bonds</strong>
             </span>
             {openSections.lifeInsurance ? <MdExpandLess /> : <MdExpandMore />}
           </div>
           {openSections.lifeInsurance && (
             <p className="mt-4 text-gray-700">
-              Life insurance provides financial protection for your loved ones in the event of your passing. Term insurance is the most cost-effective option, offering a high coverage-to-cost ratio. It provides a payout to beneficiaries if the policyholder dies during the term.
-              <br />
-              Consider your financial obligations and coverage needs before purchasing life insurance. Focus on term insurance rather than whole life or endowment policies, which often carry higher costs and lower returns. Review your policy periodically and ensure it aligns with your current financial situation.
+              A bond is a fixed-income debt instrument representing a loan made by an investor to a borrower (typically a corporation or government entity). The issuer promises to repay the principal amount on a specified maturity date and pays periodic interest (coupon payments) during the bond's lifetime.
             </p>
           )}
         </div>

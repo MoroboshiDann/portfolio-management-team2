@@ -60,45 +60,26 @@ const Dashboard = () => {
       try {
         console.log("start fetching portfolio data");
         // Fetch portfolio data
-        const portfolioResponse = await fetch('/api/portfolio/chart-data');
-        if (!portfolioResponse.ok) {
+        const monthlyAssetResponse = await fetch('/api/dashboard/monthly-asset');
+        if (!monthlyAssetResponse.ok) {
           throw new Error('Failed to fetch portfolio data');
         }
-        const portfolioResult = await portfolioResponse.json();
+        const monthlyAssetResult = await monthlyAssetResponse.json();
         console.log("fetched portfolio data");
-        // setPortfolioData({
-        //   datasets: [{
-        //     ...portfolioData.datasets[0],
-        //     data: portfolioResult.values
-        //   }]
-        // });
-        portfolioData.datasets[0].data = portfolioResult.values;
-        console.log(portfolioResult.values);
-        console.log(portfolioData);
-        console.log("start fetching transaction data");
+
+        portfolioData.datasets[0].data = monthlyAssetResult.values;
+        // console.log(monthlyAssetResult.values);
+        // console.log(portfolioData);
+        // console.log("start fetching transaction data");
 
         // Fetch transaction data
-        const transactionResponse = await fetch('/api/transactions/chart-data');
+        const transactionResponse = await fetch('/api/dashboard/transaction-data');
         if (!transactionResponse.ok) {
           throw new Error('Failed to fetch transaction data');
         }
         const transactionResult = await transactionResponse.json();
         console.log("fetched portfolio data");
         transactionData.datasets[0].data = transactionResult.values;
-        // Update state with fetched data
-        // setPortfolioData({
-        //   datasets: [{
-        //     ...portfolioData.datasets[0],
-        //     data: portfolioResult.values
-        //   }]
-        // });
-        
-        // setTransactionData({
-        //   datasets: [{
-        //     ...transactionData.datasets[0],
-        //     data: transactionResult.values
-        //   }]
-        // });
         
         setLoading(false);
       } catch (err) {

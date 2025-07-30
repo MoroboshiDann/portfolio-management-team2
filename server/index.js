@@ -4,11 +4,12 @@ const path = require('path');
 require('dotenv').config();
 
 // Import routes
-const portfolioRoutes = require('./routes/portfolio');
-const transactionRoutes = require('./routes/transactions');
+const dashboardRoutes = require('./routes/dashboard');
+// const transactionRoutes = require('./routes/transactions');
 const assetchartRouter = require('./routes/assetchart');
 const transFormRouter = require('./routes/trans_form');
 const companyCodesRouter = require('./routes/company_codes');
+const aiAdvisorRouter = require('./routes/ai_advisor');
 const stockRouter = require('./routes/stockroutes'); // Import stock routes
 const latestStockRouter = require('./routes/latestStockRoutes');
 
@@ -20,11 +21,12 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api/portfolio', portfolioRoutes);
-app.use('/api/transactions', transactionRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+// app.use('/api/transactions', transactionRoutes);
 app.use('/api/assetchart', assetchartRouter);
 app.use('/api/trans-form', transFormRouter);
 app.use('/api/company-codes', companyCodesRouter);
+app.use('/api/ai-advisor', aiAdvisorRouter);
 app.use('/api/stock', stockRouter); // Use stock routes
 app.use('/api', latestStockRouter);
 
