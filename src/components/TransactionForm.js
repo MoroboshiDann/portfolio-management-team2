@@ -113,10 +113,10 @@ const TransactionForm = () => {
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                 >
                   <option value="">Select an asset</option>
-                  <option value="stock">stock</option>
+                  <option value="stock">stocks</option>
                   <option value="mutual funds">mutual funds</option>
                   <option value="gold">gold</option>
-                  <option value="fixed deposite">fixed deposite</option>
+                  <option value="fixed deposite">fixed deposits</option>
                   <option value="real estate">real estate</option>
                   <option value="bonds">bonds</option>
                 </Field>

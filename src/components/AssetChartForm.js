@@ -203,7 +203,7 @@ const AssetChartForm = () => {
               <thead>
                 <tr>
                   <th className="py-2 px-4 border-b">Name</th>
-                  <th className="py-2 px-4 border-b">Asset</th>
+                  <th className="py-2 px-4 border-b">Type</th>
                   <th className="py-2 px-4 border-b">Amount</th>
                   <th className="py-2 px-4 border-b">Date</th>
                 </tr>
