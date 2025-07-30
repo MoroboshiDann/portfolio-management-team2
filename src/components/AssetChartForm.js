@@ -1,27 +1,32 @@
-import { Pie } from "react-chartjs-2";
-import { useState, useEffect } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useState, useEffect, useRef } from "react"; // 添加 useRef
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const AssetChartForm = () => {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [{
       data: [],
-      backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384', '#4BC0C0'],
-      hoverBackgroundColor: ['#36A2EB', '#FFCE56', '#FF6384', '#4BC0C0']
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      borderWidth: 1,
+      borderColor: "#ffffff",
     }]
   });
   
   const [assetRecords, setAssetRecords] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [totalValue, setTotalValue] = useState(0); // 添加总价值状态
+  const chartRef = useRef(null); // 添加图表引用
+
+  const colorPalette = [
+    "#36A2EB", "#FFCE56", "#FF6384", "#4BC0C0", 
+    "#9966FF", "#FF9F40", "#C9CBCF", "#7EBE57"
+  ];
 
   useEffect(() => {
     fetchAssetData();
@@ -29,15 +34,34 @@ const AssetChartForm = () => {
 
   const fetchAssetData = async () => {
     try {
-      const response = await fetch('/api/assetchart/asset-allocation');
+      const response = await fetch('http://localhost:5000/api/assetchart/asset-allocation');
       const data = await response.json();
+      
+      // 1. 确保数据是有效数字
+      const validValues = data.values.map(val => {
+        const num = typeof val === 'string' 
+          ? parseFloat(val.replace(/[^0-9.]/g, '')) 
+          : Number(val);
+        return isNaN(num) ? 0 : num;
+      });
+      
+      // 2. 计算总价值并存储
+      const calculatedTotal = validValues.reduce((sum, val) => sum + val, 0);
+      setTotalValue(calculatedTotal);
+      
+      // 3. 为每种资产分配颜色
+      const backgroundColors = data.labels.map(
+        (_, index) => colorPalette[index % colorPalette.length]
+      );
       
       setChartData({
         labels: data.labels,
         datasets: [{
-          data: data.values,
-          backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384', '#4BC0C0'],
-          hoverBackgroundColor: ['#36A2EB', '#FFCE56', '#FF6384', '#4BC0C0']
+          data: validValues,
+          backgroundColor: backgroundColors,
+          hoverBackgroundColor: backgroundColors,
+          borderWidth: 1,
+          borderColor: "#ffffff",
         }]
       });
       
@@ -75,32 +99,103 @@ const AssetChartForm = () => {
     return <div className="p-4 text-center">Loading asset data...</div>;
   }
 
+    const getChartInstance = () => {
+    return chartRef.current?.chartInstance;
+  };
+
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-bold mb-4">Asset Allocation</h2>
       
-      <div className="h-96 flex justify-center">
-        <Pie 
+      <div className="h-96 flex justify-center relative">
+        <Doughnut
+          ref={chartRef} // 添加引用
           data={chartData}
           options={{
+            cutout: "60%",
+            maintainAspectRatio: false,
             onClick: handleChartClick,
             plugins: {
+              datalabels: {
+                display: function(context) {
+                  // 只显示非零值的标签
+                  const value = context.dataset.data[context.dataIndex];
+                  return value > 0;
+                },
+                color: "#ffffff",
+                font: {
+                  weight: "bold",
+                  size: 12
+                },
+                formatter: (value) => {
+                  // 4. 使用存储的总价值计算百分比
+                  if (totalValue === 0) return "0%";
+                  const percentage = Math.round((value / totalValue) * 100);
+                  return `${percentage}%`;
+                }
+              },
               legend: {
-                position: 'bottom',
+                position: "bottom",
+                labels: {
+                  padding: 20,
+                  font: {
+                    size: 12
+                  },
+                  generateLabels: (chart) => {
+                    const datasets = chart.data.datasets;
+                    return chart.data.labels.map((label, i) => ({
+                      text: `${label}: $${datasets[0].data[i].toLocaleString()}`,
+                      fillStyle: datasets[0].backgroundColor[i],
+                      strokeStyle: datasets[0].borderColor,
+                      lineWidth: 1,
+                      hidden: datasets[0].data[i] === 0, // 隐藏零值图例
+                      index: i
+                    }));
+                  }
+                },
                 onClick: (e, legendItem, legend) => {
-                  const assetType = legend.chart.data.labels[legendItem.index].toLowerCase();
-                  fetchAssetRecords(assetType);
+                  if (!legendItem.hidden) {
+                    const assetType = chartData.labels[legendItem.index].toLowerCase();
+                    fetchAssetRecords(assetType);
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || "";
+                    const value = context.raw || 0;
+                    
+                    // 5. 使用存储的总价值计算百分比
+                    if (totalValue === 0) return `${label}: $${value.toLocaleString()}`;
+                    
+                    const percentage = ((value / totalValue) * 100).toFixed(1);
+                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                  }
                 }
               }
             }
           }}
         />
+        
+        {/* 6. 添加中心总价值显示 */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <div className="text-center">
+            <div className="text-sm text-gray-600 font-medium">Total Value</div>
+            <div className="text-xl font-bold text-gray-800">
+              ${totalValue.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
+            </div>
+          </div>
+        </div>
       </div>
       
       {selectedAsset && (
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-4">
-            {selectedAsset.charAt(0).toUpperCase() + selectedAsset.slice(1)} Records
+            {selectedAsset.charAt(0).toLowerCase() + selectedAsset.slice(1)} Records
           </h3>
           
           <div className="overflow-x-auto">
