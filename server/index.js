@@ -8,6 +8,7 @@ const dashboardRoutes = require('./routes/dashboard');
 // const transactionRoutes = require('./routes/transactions');
 const assetchartRouter = require('./routes/assetchart');
 const transFormRouter = require('./routes/trans_form');
+const enhancedTransFormRouter = require('./routes/enhanced_trans_form');
 const companyCodesRouter = require('./routes/company_codes');
 const aiAdvisorRouter = require('./routes/ai_advisor');
 const stockRouter = require('./routes/stockroutes'); // Import stock routes
@@ -25,6 +26,7 @@ app.use('/api/dashboard', dashboardRoutes);
 // app.use('/api/transactions', transactionRoutes);
 app.use('/api/assetchart', assetchartRouter);
 app.use('/api/trans-form', transFormRouter);
+app.use('/api/enhanced-trans-form', enhancedTransFormRouter);
 app.use('/api/company-codes', companyCodesRouter);
 app.use('/api/ai-advisor', aiAdvisorRouter);
 app.use('/api/stock', stockRouter); // Use stock routes
