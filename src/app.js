@@ -7,7 +7,7 @@ import "./App.css";
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const AssetChartForm = lazy(() => import("./components/AssetChartForm"));
 const TransactionForm = lazy(() => import("./components/TransactionForm"));
-// const TransactionRecommendation = lazy(() => import("./components/TransRec"));
+const TransactionRecommendation = lazy(() => import("./components/TransRec"));
 const StockData = lazy(() => import("./components/StockData"));
 const AssetAllocation = lazy(() => import("./components/AssetAllocationChart"));
 const Navbar = lazy(() => import("./components/Navbar")); // Import Navbar
@@ -67,8 +67,21 @@ function App() {
                 <Route
                   // path="/transrec"
                   // element={<TransactionRecommendation />} // No longer need to pass transactions
+                  // path="/transrec"
+                  // element={<StockData />} // Use StockData component for stock data
                   path="/transrec"
-                  element={<StockData />} // Use StockData component for stock data
+                  element={
+                    <div className="combined-view">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="bg-white p-4 rounded-lg shadow">
+                          <StockData />
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow">
+                          <TransactionRecommendation />
+                        </div>
+                      </div>
+                    </div>
+                  }
                 />
               </Routes>
             </div>

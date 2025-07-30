@@ -28,6 +28,31 @@
   color: #61dafb;
 }
 
+.combined-view {
+  width: 100%;
+}
+
+.combined-view .grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .combined-view .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.combined-view .stock-data-container,
+.combined-view .container {
+  margin: 0;
+  padding: 0;
+}
+
+.combined-view .stock-data-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
