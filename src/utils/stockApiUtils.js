@@ -1,16 +1,17 @@
-// src/utils/handleStockUtil.js
-const { getLatestStockData } = require('../../server/routes/latestStockService');
+// src/utils/stockApiUtils.js
 
 /**
  * 获取最新股票数据（只包含股票代码和价格）
  * @param {string} stockCode - 股票代码
  * @returns {Promise<Array>} 包含股票代码和价格的对象数组
  */
-const getLatestStockPrice = async (stockCode) => {
+export const getLatestStockPrice = async (stockCode) => {
   try {
-    const data = await getLatestStockData(stockCode);
-    
- 
+    const response = await fetch(`http://localhost:5000/api/stock/stock-data/${stockCode}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
     
     // 提取最新的两条数据，只保留股票代码和开盘价格（重命名为price）
     const result = data.slice(0, 2).map(item => ({
@@ -31,9 +32,13 @@ const getLatestStockPrice = async (stockCode) => {
  * @param {string} startDate - 开始日期
  * @returns {Promise<Array>} 包含股票代码和价格的对象数组
  */
-const getStockPriceByDate = async (stockCode, startDate) => {
+export const getStockPriceByDate = async (stockCode, startDate) => {
   try {
-    const data = await getLatestStockData(stockCode, startDate);
+    const response = await fetch(`http://localhost:5000/api/stock/stock-data/${stockCode}?startDate=${startDate}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
     
     // 提取特定日期的数据，只保留股票代码、开盘价格和日期
     const result = data.map(item => ({
@@ -48,5 +53,3 @@ const getStockPriceByDate = async (stockCode, startDate) => {
     throw error;
   }
 };
-
-module.exports = { getLatestStockPrice, getStockPriceByDate };
