@@ -212,10 +212,10 @@ const AssetChartForm = () => {
                 {assetRecords.map(record => (
                   <tr key={record.id}>
                     <td className="py-2 px-4 border-b">{record.name}</td>
-                    <td className="py-2 px-4 border-b">{record.asset}</td>
+                    <td className="py-2 px-4 border-b">{record.type}</td>
                     <td className="py-2 px-4 border-b">${record.amount.toLocaleString()}</td>
                     <td className="py-2 px-4 border-b">
-                      {new Date(record.create_date).toLocaleDateString('zh-CN', {
+                      {new Date(record.date).toLocaleDateString('zh-CN', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit'

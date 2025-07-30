@@ -10,6 +10,12 @@ const getLatestStockPrice = async (stockCode) => {
   try {
     const data = await getLatestStockData(stockCode);
     
+    // 确保data是数组格式
+    if (!Array.isArray(data)) {
+      console.error('API返回的数据不是数组格式:', data);
+      throw new Error('API返回的数据格式不正确');
+    }
+    
     // 提取最新的两条数据，只保留股票代码和开盘价格（重命名为price）
     const result = data.slice(0, 2).map(item => ({
       symbol: stockCode,
@@ -32,6 +38,12 @@ const getLatestStockPrice = async (stockCode) => {
 const getStockPriceByDate = async (stockCode, startDate) => {
   try {
     const data = await getLatestStockData(stockCode, startDate);
+    
+    // 确保data是数组格式
+    if (!Array.isArray(data)) {
+      console.error('API返回的数据不是数组格式:', data);
+      throw new Error('API返回的数据格式不正确');
+    }
     
     // 提取特定日期的数据，只保留股票代码、开盘价格和日期
     const result = data.map(item => ({
