@@ -19,11 +19,73 @@ const StockData = () => {
     const [inputSymbol, setInputSymbol] = useState('aapl'); // 输入框中的股票代码
     const [searchHistory, setSearchHistory] = useState(['aapl']); // 存储查询历史
 
+    // 生成缓存键
+    const generateCacheKey = (symbol) => {
+        return `stock_data_${symbol}`;
+    };
+
+    // 从localStorage获取缓存数据
+    const getFromCache = (key) => {
+        try {
+            const cached = localStorage.getItem(key);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                // 缓存时长设置为1小时(3600000毫秒)
+                const cacheExpiry = 60 * 60 * 1000;
+                if (Date.now() - parsed.timestamp < cacheExpiry) {
+                    console.log(`Stock data cache hit for key: ${key}`);
+                    return parsed.data;
+                } else {
+                    console.log(`Stock data cache expired for key: ${key}`);
+                    localStorage.removeItem(key);
+                }
+            }
+        } catch (error) {
+            console.error('Error reading stock data from cache:', error);
+        }
+        return null;
+    };
+
+    // 将数据存储到localStorage缓存
+    const saveToCache = (key, data) => {
+        try {
+            const cacheItem = {
+                timestamp: Date.now(),
+                data: data
+            };
+            localStorage.setItem(key, JSON.stringify(cacheItem));
+            console.log(`Stock data saved to cache with key: ${key}`);
+        } catch (error) {
+            console.error('Error saving stock data to cache:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchStockData = async () => {
             try {
                 setLoading(true);
                 setError(null);
+                
+                // 生成缓存键
+                const cacheKey = generateCacheKey(symbol);
+                
+                // 首先尝试从缓存中获取数据
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    setStockData(cachedData);
+                    
+                    // 添加到搜索历史（避免重复）
+                    setSearchHistory(prevHistory => {
+                        if (!prevHistory.includes(symbol.toLowerCase())) {
+                            return [...prevHistory, symbol.toLowerCase()];
+                        }
+                        return prevHistory;
+                    });
+                    
+                    setLoading(false);
+                    return;
+                }
+                
                 // 调用后端 API，使用动态股票代码
                 const response = await fetch(`http://localhost:5000/api/stock/stock-data/${symbol}`);
                 if (!response.ok) {
@@ -31,6 +93,9 @@ const StockData = () => {
                 }
                 const data = await response.json();
                 setStockData(data);
+                
+                // 保存到缓存
+                saveToCache(cacheKey, data);
                 
                 // 添加到搜索历史（避免重复）
                 setSearchHistory(prevHistory => {
