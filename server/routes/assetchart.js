@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { getStockPriceByDate, generateRandomPrice } = require('../../src/utils/handleStockUtil');
+const { getLatestStockPrice, generateRandomPrice } = require('../../src/utils/handleStockUtil');
 
 // Function to get stock code from company name (copied from enhanced_trans_form.js)
 const getStockCode = async (companyName) => {
@@ -59,7 +59,7 @@ const getAssetPrice = async (assetType, companyName, date) => {
     
     console.log(`Using stock code: ${stockCode} to fetch price for date: ${date}`);
     try {
-      const stockData = await getStockPriceByDate(stockCode, date);
+      const stockData = await getLatestStockPrice(stockCode);
       console.log(`Stock data received:`, stockData);
       
       if (stockData.length > 0) {
@@ -150,7 +150,7 @@ router.get('/asset-records', async (req, res) => {
           
           // Use the same approach as enhanced_trans_form.js
           try {
-            currentPrice = await getAssetPrice(record.type, record.name, '2025-07-29');
+            currentPrice = await getAssetPrice(record.type, record.name, record.date);
             console.log(`Got price for ${record.name}: $${currentPrice}`);
           } catch (priceError) {
             console.error(`Failed to get price for ${record.name}:`, priceError.message);
