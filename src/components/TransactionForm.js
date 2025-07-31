@@ -272,7 +272,7 @@ const TransactionForm = () => {
                                      <option value="stocks">stocks</option>
                   <option value="mutual funds">mutual funds</option>
                   <option value="gold">gold</option>
-                                     <option value="fixed deposite">fixed deposite</option>
+                                     <option value="fixed deposits">fixed deposits</option>
                   <option value="real estate">real estate</option>
                   <option value="bonds">bonds</option>
                 </Field>

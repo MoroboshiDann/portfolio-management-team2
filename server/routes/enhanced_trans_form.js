@@ -39,7 +39,7 @@ const generateVirtualPrice = (assetType) => {
   const basePrices = {
     'mutual funds': 50,
     'gold': 2000,
-    'fixed deposite': 100,
+    'fixed deposits': 100,
     'real estate': 500000,
     'bonds': 100
   };
