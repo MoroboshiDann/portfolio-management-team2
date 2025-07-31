@@ -6,7 +6,7 @@ use portfolio_pulse;
    `amount` decimal(15,2) DEFAULT NULL,
    `name` varchar(45) DEFAULT NULL,
    `date` date NOT NULL DEFAULT (curdate()),
-   `type` enum('stocks','mutual funds','gold','real estate','fixed deposite','bonds') NOT NULL,
+   `type` enum('stocks','mutual funds','gold','real estate','fixed deposits','bonds') NOT NULL,
    `quantity` decimal(15,5) DEFAULT NULL,
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -22,7 +22,7 @@ CREATE TABLE `transaction` (
 CREATE TABLE `share_price` (
    `id` int NOT NULL AUTO_INCREMENT,
    `name` varchar(45) NOT NULL,
-   `type` enum('stocks','mutual funds','gold','real estate','fixed deposite','bonds') NOT NULL,
+   `type` enum('stocks','mutual funds','gold','real estate','fixed deposits','bonds') NOT NULL,
    `price` decimal(15,5) NOT NULL,
    `update_date` date DEFAULT (curdate()),
    PRIMARY KEY (`id`)

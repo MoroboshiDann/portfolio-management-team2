@@ -43,7 +43,7 @@ const generateRandomPrice = (assetType, assetName) => {
       minPrice = 100000;
       maxPrice = 500000;
       break;
-    case 'fixed deposite':
+    case 'fixed deposits':
       minPrice = 1;
       maxPrice = 1.1;
       break;
