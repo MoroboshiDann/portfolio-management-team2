@@ -5,20 +5,25 @@ const db = require('../db');
 // Get monthly-asset chart data
 router.get('/monthly-asset', async (req, res) => {
   try {
-    // Query to get user asset values by month
+    const { year = 2025 } = req.query;
+    // Query to get user asset values by month for specific year
     const query = `
     SELECT 
-    MONTH(tran_date) AS month,
+    MONTH(date) AS month,
     SUM(amount) as monthly_asset
-    FROM transaction
+    FROM portfolio
+    WHERE YEAR(date) = ?
     GROUP BY month`;
 
-    const [results] = await db.query(query);
+    const [results] = await db.query(query, [year]);
     console.log("this is monthly asset data --test");
     console.log(results);
-    const values = results.map(row => parseFloat(row.monthly_asset));
-    console.log(values);
-    res.json({ values });
+    const monthlyData = results.map(row => ({
+      month: row.month,
+      value: parseFloat(row.monthly_asset)
+    }));
+    console.log(monthlyData);
+    res.json({ monthlyData });
   } catch (error) {
     console.error('Error fetching monthly asset chart data:', error);
     res.status(500).json({ error: 'Failed to fetch monthly asset data' });
@@ -27,20 +32,24 @@ router.get('/monthly-asset', async (req, res) => {
 
 router.get('/transaction-data', async (req, res) => {
   try {
+    const { year = 2025 } = req.query;
     const query = `
       SELECT
       QUARTER(tran_date) as quarter,
       SUM(ABS(amount)) as total_amount
       FROM transaction
+      WHERE YEAR(tran_date) = ?
       GROUP BY quarter`;
     
-    const [results] = await db.query(query);
+    const [results] = await db.query(query, [year]);
     console.log("this is transaction data");
     console.log(results);
-    // const labels = results.map(row => `Q${row.quarter} ${row.year}`);
-    const values = results.map(row => parseFloat(row.total_amount));
+    const quarterlyData = results.map(row => ({
+      quarter: row.quarter,
+      value: parseFloat(row.total_amount)
+    }));
     
-    res.json({ values });
+    res.json({ quarterlyData });
   } catch (error) {
     console.error('Error fetching transaction chart data:', error);
     res.status(500).json({ error: 'Failed to fetch transaction data' });

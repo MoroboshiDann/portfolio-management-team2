@@ -54,32 +54,63 @@ const Dashboard = () => {
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(2025);
 
   useEffect(() => {
     const fetchChartData = async () => {
       try {
         console.log("start fetching portfolio data");
         // Fetch portfolio data
-        const monthlyAssetResponse = await fetch('/api/dashboard/monthly-asset');
+        const monthlyAssetResponse = await fetch(`/api/dashboard/monthly-asset?year=${selectedYear}`);
         if (!monthlyAssetResponse.ok) {
           throw new Error('Failed to fetch portfolio data');
         }
         const monthlyAssetResult = await monthlyAssetResponse.json();
         console.log("fetched portfolio data");
 
-        portfolioData.datasets[0].data = monthlyAssetResult.values;
+        // Create array with 12 months, defaulting to 0
+        const monthlyData = new Array(12).fill(0);
+        // Map the actual data to correct month positions (month - 1 for 0-based index)
+        if (monthlyAssetResult.monthlyData) {
+          monthlyAssetResult.monthlyData.forEach(item => {
+            monthlyData[item.month - 1] = item.value;
+          });
+        }
+        setPortfolioData(prev => ({
+          ...prev,
+          datasets: [{
+            ...prev.datasets[0],
+            data: monthlyData
+          }]
+        }));
         // console.log(monthlyAssetResult.values);
         // console.log(portfolioData);
         // console.log("start fetching transaction data");
 
         // Fetch transaction data
-        const transactionResponse = await fetch('/api/dashboard/transaction-data');
+        const transactionResponse = await fetch(`/api/dashboard/transaction-data?year=${selectedYear}`);
         if (!transactionResponse.ok) {
           throw new Error('Failed to fetch transaction data');
         }
         const transactionResult = await transactionResponse.json();
-        console.log("fetched portfolio data");
-        transactionData.datasets[0].data = transactionResult.values;
+        console.log("fetched transaction data:", transactionResult);
+        
+        // Create array with 4 quarters, defaulting to 0
+        const quarterlyData = new Array(4).fill(0);
+        // Map the actual data to correct quarter positions (quarter - 1 for 0-based index)
+        if (transactionResult.quarterlyData) {
+          transactionResult.quarterlyData.forEach(item => {
+            quarterlyData[item.quarter - 1] = item.value;
+          });
+        }
+        console.log("quarterly data array:", quarterlyData);
+        setTransactionData(prev => ({
+          ...prev,
+          datasets: [{
+            ...prev.datasets[0],
+            data: quarterlyData
+          }]
+        }));
         
         setLoading(false);
       } catch (err) {
@@ -90,7 +121,7 @@ const Dashboard = () => {
     };
 
     fetchChartData();
-  }, []);
+  }, [selectedYear]);
 
   if (loading) {
     return (
@@ -110,9 +141,20 @@ const Dashboard = () => {
 
   return (
     <div className="p-8 bg-gray-100 h-full">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">
-        Financial Dashboard
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-gray-800">
+          Financial Dashboard
+        </h2>
+        <select 
+          value={selectedYear} 
+          onChange={(e) => setSelectedYear(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value={2023}>2023</option>
+          <option value={2024}>2024</option>
+          <option value={2025}>2025</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-4">Total Assets</h3>
