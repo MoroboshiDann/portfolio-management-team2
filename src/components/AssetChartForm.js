@@ -21,6 +21,7 @@ const AssetChartForm = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalValue, setTotalValue] = useState(0); // 添加总价值状态
+  const [calculatingProfitRates, setCalculatingProfitRates] = useState(false); // 添加profit rate计算状态
   const chartRef = useRef(null); // 添加图表引用
 
   const colorPalette = [
@@ -75,14 +76,18 @@ const AssetChartForm = () => {
   const fetchAssetRecords = async (type) => {
     try {
       setLoading(true);
+      setCalculatingProfitRates(true);
+      
       const response = await fetch(`/api/assetchart/asset-records?type=${type}`);
       const data = await response.json();
       
       setAssetRecords(data);
       setSelectedAsset(type);
+      setCalculatingProfitRates(false);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching asset records:', error);
+      setCalculatingProfitRates(false);
       setLoading(false);
     }
   };
@@ -195,7 +200,7 @@ const AssetChartForm = () => {
       {selectedAsset && (
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-4">
-            {selectedAsset.charAt(0).toLowerCase() + selectedAsset.slice(1)} Records
+            {selectedAsset.charAt(0).toUpperCase() + selectedAsset.slice(1)} Records
           </h3>
           
           <div className="overflow-x-auto">
@@ -204,7 +209,9 @@ const AssetChartForm = () => {
                 <tr>
                   <th className="py-2 px-4 border-b">Name</th>
                   <th className="py-2 px-4 border-b">Type</th>
+                  <th className="py-2 px-4 border-b">Quantity</th>
                   <th className="py-2 px-4 border-b">Amount</th>
+                  <th className="py-2 px-4 border-b">Profit Rate</th>
                   <th className="py-2 px-4 border-b">Date</th>
                 </tr>
               </thead>
@@ -212,10 +219,22 @@ const AssetChartForm = () => {
                 {assetRecords.map(record => (
                   <tr key={record.id}>
                     <td className="py-2 px-4 border-b">{record.name}</td>
-                    <td className="py-2 px-4 border-b">{record.asset}</td>
+                    <td className="py-2 px-4 border-b">{record.type}</td>
+                    <td className="py-2 px-4 border-b">{record.quantity?.toLocaleString() || 'N/A'}</td>
                     <td className="py-2 px-4 border-b">${record.amount.toLocaleString()}</td>
                     <td className="py-2 px-4 border-b">
-                      {new Date(record.create_date).toLocaleDateString('zh-CN', {
+                      {calculatingProfitRates ? (
+                        <span className="text-blue-500">Calculating...</span>
+                      ) : record.profitRate !== null && record.profitRate !== undefined ? (
+                        <span className={`font-semibold ${record.profitRate >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {record.profitRate.toFixed(2)}%
+                        </span>
+                      ) : (
+                        <span className="text-gray-500">N/A</span>
+                      )}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {new Date(record.date).toLocaleDateString('zh-CN', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit'
@@ -228,13 +247,19 @@ const AssetChartForm = () => {
                 <tr className="font-semibold">
                   <td className="py-2 px-4 border-t" colSpan="2">Total {selectedAsset}</td>
                   <td className="py-2 px-4 border-t">
-                  ${assetRecords
-                  .reduce((sum, record) => sum + parseFloat(record.amount), 0)
-                  .toLocaleString('en-US', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}
+                    {assetRecords
+                      .reduce((sum, record) => sum + (record.quantity || 0), 0)
+                      .toLocaleString()}
                   </td>
+                  <td className="py-2 px-4 border-t">
+                    ${assetRecords
+                      .reduce((sum, record) => sum + parseFloat(record.amount), 0)
+                      .toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
+                  </td>
+                  <td className="py-2 px-4 border-t"></td>
                   <td className="py-2 px-4 border-t"></td>
                 </tr>
               </tfoot>

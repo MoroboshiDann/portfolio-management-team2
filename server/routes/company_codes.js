@@ -17,31 +17,19 @@ router.get('/', async (req, res) => {
     `;
     const likeQuery = `%${query}%`;
     const [rows] = await db.query(sql, [likeQuery, likeQuery, likeQuery]);
-    // 返回所有匹配项
+    
+    // 返回格式化的选项，每个公司只显示一个选项
     const results = [];
     for (const row of rows) {
-      if (row.stock_code) {
-        results.push({
-          label: `${row.name} (${row.stock_code}) [Stock]`,
-          value: row.stock_code,
-          type: 'Stock',
-          name: row.name
-        });
-      }
-      if (row.bond_code) {
-        results.push({
-          label: `${row.name} (${row.bond_code}) [Bonds]`,
-          value: row.bond_code,
-          type: 'Bonds',
-          name: row.name
-        });
-      }
-      // 也可直接选择公司名
+      // 创建显示标签：company_name (stock_code, bond_code)
+      const displayLabel = `${row.name} (${row.stock_code}, ${row.bond_code})`;
+      
       results.push({
-        label: `${row.name} [CompanyName]`,
-        value: row.name,
-        type: 'CompanyName',
-        name: row.name
+        label: displayLabel,
+        value: row.name, // 只返回公司名称作为值
+        stockCode: row.stock_code,
+        bondCode: row.bond_code,
+        companyName: row.name
       });
     }
     res.json(results);

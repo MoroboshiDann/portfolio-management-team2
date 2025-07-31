@@ -38,26 +38,11 @@ CREATE TABLE IF NOT EXISTS company_code (
 
 -- 插入五个知名公司及其股票、债券代码
 INSERT INTO company_code (name, stock_code, bond_code) VALUES
-('Tesla', 'TSLA', 'US88160RAC05'),
-('Apple', 'AAPL', 'US037833AJ97'),
-('Microsoft', 'MSFT', 'US594918BP81'),
-('Amazon', 'AMZN', 'US023135BZ93'),
-('Alphabet', 'GOOGL', 'US02079KAA25'),
-('Meta Platforms', 'META', 'US30303MAB14'),    
-('NVIDIA', 'NVDA', 'US67066GAA26'),
-('Berkshire Hathaway', 'BRK.A', 'US084670BL16'),
-('Johnson & Johnson', 'JNJ', 'US478160BG10'),
-('Visa', 'V', 'US92826CAB76'),
-('JPMorgan Chase', 'JPM', 'US46625HJD34'),
-('Walmart', 'WMT', 'US931142DY36'),
-('Procter & Gamble', 'PG', 'US742718EZ64'),
-('UnitedHealth Group', 'UNH', 'US91324PDR16'),
-('Exxon Mobil', 'XOM', 'US30231GBE01'),
-('Mastercard', 'MA', 'US57636QAM19'),
-('The Home Depot', 'HD', 'US437076BQ00'),
-('Bank of America', 'BAC', 'US06051GGS36'),
-('Coca-Cola', 'KO', 'US191216BP88'),
-('Pfizer', 'PFE', 'US717081EB36');
+('tesla', 'tsla', 'US88160RAC05'),
+('apple', 'aapl', 'US037833AJ97'),
+('microsoft', 'msft', 'US594918BP81'),
+('amazon', 'amzn', 'US023135BZ93'),  
+('nvidia', 'nvda', 'US67066GAA26');
 
 
-INSERT INTO share_price (name, type, price) VALUES ('Tesla', 'bonds', 15.11);
+-- INSERT INTO share_price (name, type, price) VALUES ('tesla', 'bonds', 15.11);
