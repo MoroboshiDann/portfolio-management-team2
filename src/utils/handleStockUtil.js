@@ -31,6 +31,37 @@ const getLatestStockPrice = async (stockCode) => {
  */
 const getStockPriceByDate = async (stockCode, startDate) => {
   try {
+    // 检查是否传入了日期
+    if (startDate) {
+      // 获取当前日期（格式：YYYY-MM-DD）
+      const today = new Date().toISOString().split('T')[0];
+      // 格式化输入日期
+      const inputDate = new Date(startDate).toISOString().split('T')[0];
+      
+      // 如果输入日期是今天，则获取最新数据并模拟当前价格
+      if (inputDate === today) {
+        // 获取最新数据（不传日期参数）
+        const latestData = await getLatestStockData(stockCode);
+        
+        // 取最新的一条数据
+        if (latestData && latestData.length > 0) {
+          const latestItem = latestData[0];
+          
+          // 添加随机波动（±0.2%）
+          const fluctuation = 0.002; // 0.2%
+          const randomFactor = 1 + (Math.random() * 2 - 1) * fluctuation;
+          const simulatedPrice = latestItem.open * randomFactor;
+          
+          return [{
+            symbol: stockCode,
+            price: simulatedPrice,
+            date: latestItem.date.split('T')[0]
+          }];
+        }
+      }
+    }
+    
+    // 原有逻辑：获取特定日期的数据
     const data = await getLatestStockData(stockCode, startDate);
     
     // 提取特定日期的数据，只保留股票代码、开盘价格和日期
