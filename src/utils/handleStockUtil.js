@@ -7,15 +7,22 @@ const { getLatestStockData } = require('../../server/routes/latestStockService')
  * @param {string} date - 日期 (YYYY-MM-DD格式)
  * @returns {Promise<Array>} 包含股票代码和价格的对象数组
  */
-const getLatestStockPrice = async (stockCode, date = '2025-07-29') => {
+const getLatestStockPrice = async (stockCode) => {
   try {
     // 使用getStockPriceByDate函数来获取指定日期的股票价格
-    const result = await getStockPriceByDate(stockCode, date);
-    
-    console.log(`Successfully fetched stock price for ${stockCode} on ${date}:`, result);
+    const data = await getLatestStockData(stockCode);
+    if (!Array.isArray(data)) {
+      console.error('API返回的数据不是数组格式:', data);
+      throw new Error('API返回的数据格式不正确');
+    }
+    const result = data.slice(0, 2).map(item => ({
+      symbol: stockCode,
+      price: item.open
+    }));
+    // console.log(`Successfully fetched stock price for ${stockCode}`, result);
     return result;
   } catch (error) {
-    console.error(`获取股票数据失败 for ${stockCode} on ${date}:`, error);
+    // console.error(`获取股票数据失败 for ${stockCode}:`, error);
     throw error;
   }
 };

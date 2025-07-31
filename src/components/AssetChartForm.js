@@ -4,7 +4,6 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState, useEffect, useRef } from "react"; // 添加 useRef
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
-
 const AssetChartForm = () => {
   const [chartData, setChartData] = useState({
     labels: [],
@@ -20,10 +19,12 @@ const AssetChartForm = () => {
   const [assetRecords, setAssetRecords] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [totalValue, setTotalValue] = useState(0); // 添加总价值状态
-  const [calculatingProfitRates, setCalculatingProfitRates] = useState(false); // 添加profit rate计算状态
-  const chartRef = useRef(null); // 添加图表引用
-
+  const [totalValue, setTotalValue] = useState(0);
+  const [calculatingProfitRates, setCalculatingProfitRates] = useState(false);
+  const chartRef = useRef(null);
+  
+  // Stable color mapping for asset types
+  const colorMapRef = useRef({});
   const colorPalette = [
     "#36A2EB", "#FFCE56", "#FF6384", "#4BC0C0", 
     "#9966FF", "#FF9F40", "#C9CBCF", "#7EBE57"
@@ -38,27 +39,41 @@ const AssetChartForm = () => {
       const response = await fetch('http://localhost:5000/api/assetchart/asset-allocation');
       const data = await response.json();
       
-      // 1. 确保数据是有效数字
-      const validValues = data.values.map(val => {
-        const num = typeof val === 'string' 
-          ? parseFloat(val.replace(/[^0-9.]/g, '')) 
-          : Number(val);
-        return isNaN(num) ? 0 : num;
+      // Aggregate data for duplicate labels
+      const aggregatedData = {};
+      data.labels.forEach((label, index) => {
+        const cleanLabel = label.trim();
+        const value = typeof data.values[index] === 'string' 
+          ? parseFloat(data.values[index].replace(/[^0-9.]/g, '')) 
+          : Number(data.values[index]);
+          
+        if (!isNaN(value)) {
+          if (!aggregatedData[cleanLabel]) {
+            aggregatedData[cleanLabel] = 0;
+          }
+          aggregatedData[cleanLabel] += value;
+        }
       });
       
-      // 2. 计算总价值并存储
-      const calculatedTotal = validValues.reduce((sum, val) => sum + val, 0);
-      setTotalValue(calculatedTotal);
+      const labels = Object.keys(aggregatedData);
+      const values = Object.values(aggregatedData);
+      const total = values.reduce((sum, val) => sum + val, 0);
+      setTotalValue(total);
       
-      // 3. 为每种资产分配颜色
-      const backgroundColors = data.labels.map(
-        (_, index) => colorPalette[index % colorPalette.length]
-      );
+      // Assign consistent colors
+      const backgroundColors = labels.map(label => {
+        if (!colorMapRef.current[label]) {
+          // Get next available color
+          const colorIndex = Object.keys(colorMapRef.current).length % colorPalette.length;
+          colorMapRef.current[label] = colorPalette[colorIndex];
+        }
+        return colorMapRef.current[label];
+      });
       
       setChartData({
-        labels: data.labels,
+        labels,
         datasets: [{
-          data: validValues,
+          data: values,
           backgroundColor: backgroundColors,
           hoverBackgroundColor: backgroundColors,
           borderWidth: 1,
@@ -209,8 +224,8 @@ const AssetChartForm = () => {
                 <tr>
                   <th className="py-2 px-4 border-b">Name</th>
                   <th className="py-2 px-4 border-b">Type</th>
-                  <th className="py-2 px-4 border-b">Quantity</th>
                   <th className="py-2 px-4 border-b">Amount</th>
+                  <th className="py-2 px-4 border-b">Quantity</th>
                   <th className="py-2 px-4 border-b">Profit Rate</th>
                   <th className="py-2 px-4 border-b">Date</th>
                 </tr>
@@ -220,13 +235,13 @@ const AssetChartForm = () => {
                   <tr key={record.id}>
                     <td className="py-2 px-4 border-b">{record.name}</td>
                     <td className="py-2 px-4 border-b">{record.type}</td>
-                    <td className="py-2 px-4 border-b">{record.quantity?.toLocaleString() || 'N/A'}</td>
                     <td className="py-2 px-4 border-b">${record.amount.toLocaleString()}</td>
+                    <td className="py-2 px-4 border-b">{record.quantity?.toLocaleString() || 'N/A'}</td>
                     <td className="py-2 px-4 border-b">
                       {calculatingProfitRates ? (
                         <span className="text-blue-500">Calculating...</span>
                       ) : record.profitRate !== null && record.profitRate !== undefined ? (
-                        <span className={`font-semibold ${record.profitRate >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <span className={`font-semibold ${record.profitRate >= 0 ? 'text-red-600' : 'text-green-600'}`}>
                           {record.profitRate.toFixed(2)}%
                         </span>
                       ) : (
@@ -246,11 +261,6 @@ const AssetChartForm = () => {
               <tfoot>
                 <tr className="font-semibold">
                   <td className="py-2 px-4 border-t" colSpan="2">Total {selectedAsset}</td>
-                  <td className="py-2 px-4 border-t">
-                    {assetRecords
-                      .reduce((sum, record) => sum + (record.quantity || 0), 0)
-                      .toLocaleString()}
-                  </td>
                   <td className="py-2 px-4 border-t">
                     ${assetRecords
                       .reduce((sum, record) => sum + parseFloat(record.amount), 0)
